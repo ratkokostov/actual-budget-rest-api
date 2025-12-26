@@ -46,6 +46,7 @@ export const CreateTransactionSchema = z.object({
     date: z.string().min(1),
     amount: z.number(),
     payee: z.string().max(255).optional(),
+    payee_name: z.string().max(255).optional(),
     notes: z.string().max(1000).optional(),
     category: z.string().optional(),
 });
