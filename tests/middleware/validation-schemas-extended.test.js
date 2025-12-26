@@ -56,42 +56,35 @@ describe('Extended Validation Schemas', () => {
   describe('CreateTransactionSchema', () => {
     it('should validate valid transaction', () => {
       const result = CreateTransactionSchema.safeParse({
-        transaction: {
           account: 'account-123',
           amount: 1000,
-        },
+          date: '2025-12-26'
       });
       expect(result.success).toBe(true);
     });
 
     it('should reject missing account', () => {
       const result = CreateTransactionSchema.safeParse({
-        transaction: {
           amount: 1000,
-        },
       });
       expect(result.success).toBe(false);
     });
 
     it('should reject missing amount', () => {
       const result = CreateTransactionSchema.safeParse({
-        transaction: {
           account: 'account-123',
-        },
       });
       expect(result.success).toBe(false);
     });
 
     it('should accept optional fields', () => {
       const result = CreateTransactionSchema.safeParse({
-        transaction: {
           account: 'account-123',
           amount: 1000,
           date: '2024-01-01',
           payee: 'Test Payee',
           notes: 'Test notes',
           category: 'category-123',
-        },
       });
       expect(result.success).toBe(true);
     });

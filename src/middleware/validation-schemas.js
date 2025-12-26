@@ -42,14 +42,12 @@ export const AccountBalanceQuerySchema = z.object({
 
 // Transaction schemas
 export const CreateTransactionSchema = z.object({
-  transaction: z.object({
     account: z.string().min(1),
-    date: z.string().optional(),
+    date: z.string().min(1),
     amount: z.number(),
     payee: z.string().max(255).optional(),
     notes: z.string().max(1000).optional(),
     category: z.string().optional(),
-  }),
 });
 
 export const UpdateTransactionSchema = z.object({
