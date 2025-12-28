@@ -123,7 +123,8 @@ export const SetBudgetSchema = z.object({
 // Rule schemas
 export const CreateRuleSchema = z.object({
   rule: z.object({
-    stage: z.string().optional(),
+    stage: z.string().nullable().optional(),
+    conditionsOp: z.enum(['and', 'or']).default('and'),
     conditions: z.array(z.any()),
     actions: z.array(z.any()),
   }),
@@ -131,7 +132,8 @@ export const CreateRuleSchema = z.object({
 
 export const UpdateRuleSchema = z.object({
   fields: z.object({
-    stage: z.string().optional(),
+    stage: z.string().nullable().optional(),
+    conditionsOp: z.enum(['and', 'or']).optional(),
     conditions: z.array(z.any()).optional(),
     actions: z.array(z.any()).optional(),
   }).refine((obj) => Object.keys(obj).length > 0, {
