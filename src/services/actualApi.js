@@ -274,11 +274,15 @@ export const transactionsAdd = async (accountId, transactions, runTransfers = fa
         learnCategories
       });
       const addedIds = await apiInstance.addTransactions(accountId, transactions, runTransfers, learnCategories);
+      const addedId = addedIds[0];
+
+      // Sync to ensure transaction is persisted before fetching
+      await apiInstance.sync();
 
       // Fetch the full transaction object for the newly created transaction
       const date = transactions[0].date;
       const fetchedTransactions = await apiInstance.getTransactions(accountId, date, date);
-      const addedTransaction = fetchedTransactions.find(t => t.id === addedIds[0]);
+      const addedTransaction = fetchedTransactions.find(t => t.id === addedId);
 
       logger.info('[Actual] transactionsAdd completed', {
         accountId,
@@ -286,7 +290,7 @@ export const transactionsAdd = async (accountId, transactions, runTransfers = fa
       });
       return addedTransaction;
     },
-    { syncBefore: false, syncAfter: true }
+    { syncBefore: false, syncAfter: false }
   );
 };
 
