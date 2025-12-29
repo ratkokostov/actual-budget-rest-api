@@ -278,10 +278,20 @@ export const transactionsAdd = async (accountId, transactions, runTransfers = fa
 
       // Sync to ensure transaction is persisted before fetching
       await apiInstance.sync();
+       const date = transactions[0].date;
+           
+               logger.info('[Actual] addTransactions result', {
+              addedIds,
+             addedId,
+             date
+            });
 
       // Fetch the full transaction object for the newly created transaction
-      const date = transactions[0].date;
       const fetchedTransactions = await apiInstance.getTransactions(accountId, date, date);
+      logger.info('[Actual] fetchedTransactions result', {
+               fetchedTransactions,
+              count: fetchedTransactions.length
+           });
       const addedTransaction = fetchedTransactions.find(t => t.id === addedId);
 
       logger.info('[Actual] transactionsAdd completed', {
