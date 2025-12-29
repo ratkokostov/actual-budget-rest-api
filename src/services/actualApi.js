@@ -267,19 +267,24 @@ export const transactionsAdd = async (accountId, transactions, runTransfers = fa
   return runWithApi(
     'transactionsAdd',
     async (apiInstance) => {
-      logger.debug('[Actual] Adding transactions', { 
-        accountId, 
+      logger.debug('[Actual] Adding transactions', {
+        accountId,
         transactionCount: transactions.length,
         runTransfers,
         learnCategories
       });
-      const result = await apiInstance.addTransactions(accountId, transactions, runTransfers, learnCategories);
-      logger.info('[Actual] transactionsAdd completed', { 
-        accountId, 
-        transactionCount: transactions.length,
-        result
+      const addedIds = await apiInstance.addTransactions(accountId, transactions, runTransfers, learnCategories);
+
+      // Fetch the full transaction object for the newly created transaction
+      const date = transactions[0].date;
+      const fetchedTransactions = await apiInstance.getTransactions(accountId, date, date);
+      const addedTransaction = fetchedTransactions.find(t => t.id === addedIds[0]);
+
+      logger.info('[Actual] transactionsAdd completed', {
+        accountId,
+        transactionId: addedTransaction?.id
       });
-      return result;
+      return addedTransaction;
     },
     { syncBefore: false, syncAfter: true }
   );

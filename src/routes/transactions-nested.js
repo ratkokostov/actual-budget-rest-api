@@ -36,8 +36,8 @@ router.post(
   asyncHandler(async (req, res) => {
     const accountId = req.validatedParams.accountId;
     const { transactions, runTransfers, learnCategories } = req.validatedBody;
-    const addedIds = await transactionsAdd(accountId, transactions, runTransfers, learnCategories);
-    res.status(201).json({ success: true, accountId, addedCount: addedIds.length, addedIds });
+    const transaction = await transactionsAdd(accountId, transactions, runTransfers, learnCategories);
+    res.status(201).json({ success: true, accountId, transaction });
   })
 );
 

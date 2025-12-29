@@ -413,7 +413,7 @@
                 type: boolean
     responses:
       201:
-        description: Transactions added
+        description: Transaction added
         content:
           application/json:
             schema:
@@ -423,12 +423,8 @@
                   type: boolean
                 accountId:
                   type: string
-                addedCount:
-                  type: integer
-                addedIds:
-                  type: array
-                  items:
-                    type: string
+                transaction:
+                  $ref: '../components/schemas.yml#/Transaction'
 
 /accounts/{accountId}/transactions/import:
   post:
