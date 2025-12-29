@@ -273,26 +273,17 @@ export const transactionsAdd = async (accountId, transactions, runTransfers = fa
         runTransfers,
         learnCategories
       });
-      const addedIds = await apiInstance.addTransactions(accountId, transactions, runTransfers, learnCategories);
-      const addedId = addedIds[0];
-
-      // Sync to ensure transaction is persisted before fetching
+      await apiInstance.addTransactions(accountId, transactions, runTransfers, learnCategories);
       await apiInstance.sync();
-       const date = transactions[0].date;
-           
-               logger.info('[Actual] addTransactions result', {
-              addedIds,
-             addedId,
-             date
-            });
 
       // Fetch the full transaction object for the newly created transaction
+      const date = transactions[0].date;
       const fetchedTransactions = await apiInstance.getTransactions(accountId, date, date);
-      logger.info('[Actual] fetchedTransactions result', {
-               fetchedTransactions,
-              count: fetchedTransactions.length
-           });
-      const addedTransaction = fetchedTransactions.find(t => t.id === addedId);
+
+      // The most recently added transaction has the highest sort_order
+      const addedTransaction = fetchedTransactions.reduce((newest, t) =>
+        !newest || t.sort_order > newest.sort_order ? t : newest
+      , null);
 
       logger.info('[Actual] transactionsAdd completed', {
         accountId,
