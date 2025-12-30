@@ -74,6 +74,41 @@ payeeById:
       required: true
       schema:
         type: string
+  get:
+    summary: Get payee by ID
+    tags: [Payees]
+    security:
+      - bearerAuth: []
+    responses:
+      200:
+        description: Payee found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                payee:
+                  $ref: '../components/schemas.yml#/Payee'
+            examples:
+              sample:
+                value:
+                  success: true
+                  payee:
+                    id: p-1
+                    name: Kroger
+      404:
+        description: Payee not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/Error'
+            examples:
+              notFound:
+                value:
+                  success: false
+                  error: Payee not found
   put:
     summary: Update payee
     tags: [Payees]

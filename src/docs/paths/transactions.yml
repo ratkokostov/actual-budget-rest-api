@@ -173,6 +173,44 @@ transactionById:
       required: true
       schema:
         type: string
+  get:
+    summary: Get transaction by ID
+    tags: [Transactions]
+    security:
+      - bearerAuth: []
+    responses:
+      200:
+        description: Transaction found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                transaction:
+                  $ref: '../components/schemas.yml#/Transaction'
+            examples:
+              sample:
+                value:
+                  success: true
+                  transaction:
+                    id: tx-1
+                    amount: -4599
+                    payee: Kroger
+                    date: "2025-12-01"
+                    category: cat-groceries
+      404:
+        description: Transaction not found
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas.yml#/Error'
+            examples:
+              notFound:
+                value:
+                  success: false
+                  error: Transaction not found
   put:
     summary: Update transaction by ID
     tags: [Transactions]

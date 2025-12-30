@@ -3,6 +3,7 @@ import express from 'express';
 import { authenticateJWT } from '../auth/jwt.js';
 import {
   payeesList,
+  payeeGet,
   payeeCreate,
   payeeUpdate,
   payeeDelete,
@@ -19,6 +20,14 @@ router.use(authenticateJWT);
 router.get('/', asyncHandler(async (req, res) => {
   const payees = await payeesList();
   res.json({ success: true, payees });
+}));
+
+router.get('/:id', validateParams(IDSchema), asyncHandler(async (req, res) => {
+  const payee = await payeeGet(req.validatedParams.id);
+  if (!payee) {
+    return res.status(404).json({ success: false, error: 'Payee not found' });
+  }
+  res.json({ success: true, payee });
 }));
 
 router.post(

@@ -339,7 +339,7 @@ export const transactionDelete = async (id) => {
     async (apiInstance) => {
       logger.debug('[Actual] Deleting transaction', { transactionId: id });
       const result = await apiInstance.deleteTransaction(id);
-      logger.info('[Actual] transactionDelete completed', { 
+      logger.info('[Actual] transactionDelete completed', {
         transactionId: id,
         deletedCount: Array.isArray(result) ? result.length : 1
       });
@@ -349,6 +349,19 @@ export const transactionDelete = async (id) => {
   );
 };
 
+export const transactionGet = async (id) => {
+  return runWithApi('transactionGet', async (apiInstance) => {
+    logger.debug('[Actual] Getting transaction by id', { transactionId: id });
+    const result = await apiInstance.getTransaction(id);
+    if (!result) {
+      logger.warn('[Actual] Transaction not found', { transactionId: id });
+      return null;
+    }
+    logger.info('[Actual] transactionGet result', { transactionId: id });
+    return result;
+  });
+};
+
 // ================ CATEGORIES ================
 export const categoriesList = async () => {
   return runWithApi('categoriesList', async (apiInstance) => {
@@ -356,6 +369,20 @@ export const categoriesList = async () => {
     const categories = await apiInstance.getCategories();
     logger.info('[Actual] categoriesList result', { count: categories.length });
     return categories;
+  });
+};
+
+export const categoryGet = async (id) => {
+  return runWithApi('categoryGet', async (apiInstance) => {
+    logger.debug('[Actual] Getting category by id', { categoryId: id });
+    const categories = await apiInstance.getCategories();
+    const category = categories.find(c => c.id === id);
+    if (!category) {
+      logger.warn('[Actual] Category not found', { categoryId: id });
+      return null;
+    }
+    logger.info('[Actual] categoryGet result', { categoryId: id, categoryName: category.name });
+    return category;
   });
 };
 
@@ -452,6 +479,20 @@ export const payeesList = async () => {
     const payees = await apiInstance.getPayees();
     logger.info('[Actual] payeesList result', { count: payees.length });
     return payees;
+  });
+};
+
+export const payeeGet = async (id) => {
+  return runWithApi('payeeGet', async (apiInstance) => {
+    logger.debug('[Actual] Getting payee by id', { payeeId: id });
+    const payees = await apiInstance.getPayees();
+    const payee = payees.find(p => p.id === id);
+    if (!payee) {
+      logger.warn('[Actual] Payee not found', { payeeId: id });
+      return null;
+    }
+    logger.info('[Actual] payeeGet result', { payeeId: id, payeeName: payee.name });
+    return payee;
   });
 };
 
